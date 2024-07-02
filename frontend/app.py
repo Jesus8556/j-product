@@ -7,7 +7,7 @@ app.secret_key = 'your_secret_key'
 @app.route('/')
 def index():
     # Realiza una solicitud GET a la API de productos
-    response = requests.get('http://localhost:3000/api/productos')
+    response = requests.get('http://backend:3000/api/productos')
     if response.status_code == 200:
         productos = response.json()
     else:
@@ -25,8 +25,8 @@ def create_product():
         precio = request.form['precio']
         imagen = request.files['imagen']
 
-        # Suponiendo que tu API está corriendo en localhost:5000
-        url = 'http://localhost:3000/api/productos'
+        # Suponiendo que tu API está corriendo en backend:5000
+        url = 'http://backend:3000/api/productos'
         files = {'imagen': imagen.read()}
         data = {
             'nombre': nombre,
@@ -55,7 +55,7 @@ def update_product(productId):
         precio = request.form['precio']
         imagen = request.files['imagen'] if 'imagen' in request.files else None
 
-        url = f'http://localhost:3000/api/productos/{productId}'
+        url = f'http://backend:3000/api/productos/{productId}'
         files = {'imagen': imagen.read()} if imagen else None
         data = {
             'nombre': nombre,
@@ -74,7 +74,7 @@ def update_product(productId):
         return redirect(url_for('index'))
 
     # Realizar una solicitud GET para obtener los detalles del producto a actualizar
-    response = requests.get(f'http://localhost:3000/api/productos/{productId}')
+    response = requests.get(f'http://backend:3000/api/productos/{productId}')
     if response.status_code == 200:
         producto = response.json()
     else:
@@ -86,7 +86,7 @@ def update_product(productId):
 # Ruta para eliminar un producto
 @app.route('/api/productos/<string:productId>', methods=['POST'])
 def delete_product(productId):
-    response = requests.delete(f'http://localhost:3000/api/productos/{productId}')
+    response = requests.delete(f'http://backend:3000/api/productos/{productId}')
 
     if response.status_code == 200:
         flash('Producto eliminado exitosamente', 'success')
@@ -96,4 +96,4 @@ def delete_product(productId):
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
